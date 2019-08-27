@@ -1,0 +1,50 @@
+<%= render "layouts/notice" %> <% if user_signed_in? && current_user.id ==
+@product.user_id %> <%= link_to 'Edit', edit_product_path(@product) %> | <% end
+%> <%= link_to 'Back', products_path %>
+<br />
+<div class="row">
+  <div class="col">
+    <%= render 'carousel', uploads: @product.uploads%>
+  </div>
+  <div class="col">
+    <h2> <%= @product.title %> </h2>
+    <br />
+    <p> <%= @product.description %> </p>
+    <br />
+    <p> Price: $<%= @product.price %> </p>
+    <br />
+    <p> Quantity: <%= @product.quantity %> </p>
+    <% if user_signed_in? %>
+      <% if current_user.id != @product.user_id %>
+        <% if current_user.cart_items.where(product_id: @product.id).exists? %>
+          <%= link_to "Already in cart", cart_path, class: 'btn btn-success' %>
+        <% elsif @product.quantity < 1 %>
+          <%= link_to "Sold Out", '#' , class: 'btn btn-danger disabled' %>
+        <% else %>
+          <%=form_with(model: @line_item, local:true) do |form|%>
+            <%= form.hidden_field :product_id, value: @product.id%>
+            <%= form.submit 'Add to cart', class: 'btn btn-warning' %>
+          <% end %>
+        <% end %>
+        <br />
+        <br />
+        <%=form_with model: [@product,@comment] do |form|%>
+          <div class="row">
+            <div class="col-10">
+              <div class="form-group">
+                <%=form.text_field :content , class: 'form-control'%>
+              </div>
+            </div>
+            <div class="col-2">
+              <div class="form-group">
+                <%= form.submit 'Comment', class: 'btn btn-primary' %>
+              </div>
+            </div>
+          </div>
+        <%end%> <%end%> <% end %>
+    <div id="comment_div">
+      <%@comments.each do |comment|%> <%= render 'comments/comment', comment:
+      comment%> <%end%>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,31 @@
+<div id='comment-<%= comment.id%>'>
+
+  <div class="row">
+
+    <div class="col-10">
+      [<%=comment.created_at.strftime('%I:%M %P')%>]<%= comment.user.email%>:
+      <%=comment.content%>
+    </div>
+
+    <div class="col-2">
+      <% if current_user && current_user == comment.user %>
+
+      <a href="<%= edit_product_comment_path(@product,comment) %>" data-remote="true">
+        <i class="fa fa-edit"></i>
+      </a>
+
+      <!-- <%= link_to 'Edit', edit_product_comment_path(@product,comment),remote: true%> -->
+      <span> | </span>
+      <!-- <%= link_to 'Delete', product_comment_path(@product,comment), method: :delete, remote: true%> -->
+
+      <a class="text-danger" href="<%= product_comment_path(@product,comment) %>" data-remote="true" rel="nofollow"
+        data-method="delete">
+        <i class="fa fa-trash"></i>
+      </a>
+
+      <% end%>
+    </div>
+
+
+  </div>
+</div>

@@ -1,0 +1,47 @@
+<div class="navbar-nav">
+    <%= render  "layouts/search_bar" %>
+</div>
+<% if user_signed_in? %>
+
+<div class="navbar-nav ml-auto">
+
+    <%= link_to 'Add Product', new_product_path, class: 'btn btn-bd-download d-none d-lg-inline-block mb-3 mb-md-0 ml-md-3'%>
+
+    <%= link_to current_user.email, edit_user_registration_path, class: 'nav-item nav-link'%>
+
+
+    <a href="<%= cart_path %>" class='nav-item nav-link'>
+        My Cart
+        <span class="badge bg-warning">
+            <% items = current_user.cart_items %>
+            <% if items.empty? %>
+            0
+            <% else %>
+            <%= items.length %>
+            <% end %>
+        </span>
+    </a>
+    <%= link_to 'My Orders',orders_path, class: 'nav-item nav-link'%>
+    <%= link_to 'Logout',destroy_user_session_path, method: :delete, class: 'nav-item nav-link'%>
+
+</div>
+
+<% else %>
+
+<div class="navbar-nav  ml-auto">
+    <%= link_to 'Login', new_user_session_path, class: 'nav-item nav-link'%>
+    <p class="nav-item nav-link">|</p>
+    <%= link_to 'Signup', new_user_registration_path, class: 'nav-item nav-link'%>
+</div>
+
+<% end %>
+
+
+<!-- <div class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Messages</a>
+                    <div class="dropdown-menu">
+                        <a href="#" class="dropdown-item">Inbox</a>
+                        <a href="#" class="dropdown-item">Sent</a>
+                        <a href="#" class="dropdown-item">Drafts</a>
+                    </div>
+                </div> -->

@@ -1,0 +1,67 @@
+<div class="row justify-content-md-center">
+  <div class="col-sm-4">
+    <%= form_with(model: product, local: true) do |form| %>
+      <% if product.errors.any? %>
+        <div id="error_explanation">
+          <h2><%= pluralize(product.errors.count, "error") %> prohibited this product from being saved:</h2>
+
+          <ul>
+            <% product.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <!-- Product => id, serial_no, title, description, price, quantity, user_id -->
+      <div class="form-group">
+        <%= form.label :title %>
+        <%= form.text_field :title, autofocus: true, class: 'form-control', required: true, pattern:".{5,70}", title:"5 to 70 characters"%>
+      </div>
+
+      <div class="form-group">
+        <%= form.label :description %>
+        <%= form.text_area :description, class: 'form-control' %>
+      </div>
+
+      <div class="form-group">
+        <%= form.label :price %>
+        <%= form.number_field :price, step:'0.01', min:'0' , class: 'form-control', required: true %>
+      </div>
+
+      <div class="form-group">
+        <%= form.label :quantity %>
+        <%= form.number_field :quantity, min:'1', class: 'form-control', required: true %>
+      </div>
+
+      <div class="form-group">
+
+        <% @product.uploads.each do |upload| %>
+          <div class="row bg-light m-2 p-2 border border-secondary rounded">
+
+            <div class="col-10">
+              <%= image_tag upload, width:50, height:50 %>
+            </div>
+
+            <div class="col-2">
+
+              <a class="text-danger" href="<%= uploads_path(upload.id) %>" rel="nofollow" data-method="delete">
+                <i class="fa fa-trash"></i>
+              </a>
+
+            </div>
+
+          </div>
+        <% end %>
+
+        <%= form.label :uploads %>
+        <%= form.file_field :uploads, multiple: true, class: 'form-control', required: false %>
+      </div>
+
+      <div class="form-group">
+        <%= form.submit 'Publish', class: 'btn btn-primary' %>
+      </div>
+    <% end %>
+
+  </div>
+</div>

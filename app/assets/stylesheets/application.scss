@@ -1,0 +1,32 @@
+// Custom bootstrap variables must be set or imported *before* bootstrap.
+@import "bootstrap";
+@import "font-awesome";
+
+main {
+    padding-bottom: 80px;
+    width: 100%;
+    margin-top: 60px;
+}
+
+.nav-link {
+    color: white !important;
+}
+
+.btn-bd-download {
+    font-weight: 600;
+    color: #ffe484;
+    border-color: #ffe484;
+}
+
+.btn-bd-download:active,
+.btn-bd-download:hover {
+    color: #2a2730;
+    background-color: #ffe484;
+    border-color: #ffe484;
+
+}
+
+.carousel-inner img {
+    width: 100%;
+    height: 100%;
+}

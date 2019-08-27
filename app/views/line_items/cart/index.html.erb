@@ -1,0 +1,134 @@
+<%= render  "layouts/notice" %>
+
+<h1>Cart</h1>
+
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Product Serail No</th>
+      <th scope="col">Title</th>
+      <th scope="col">Price</th>
+      <th scope="col">Quantity</th>
+      <th scope="col" colspan="2" class="text-center">Actions</th>
+      <th scope="col">Total</th>
+
+    </tr>
+  </thead>
+
+  <% grand_total = 0 %>
+  <tbody>
+    <% @cart_items.each do |item| %>
+      <tr>
+        <th scope="row"> <%= item.product.serial_no %> </th>
+        <td> <%= item.product.title %> </td>
+        <td> <%= item.product.price %> </td>
+        <td> <%= item.quantity %> </td>
+        <td>
+          <a href="" data-toggle="modal" data-target="#exampleModal" data-title="<%= item.product.title %>"
+                    data-item="<%= item.id %>" data-product_quantity="<%= item.product.quantity %>"
+                    data-quantity="<%= item.quantity %>">Edit</a>
+        </td>
+        <td><%= link_to 'Remove', item, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+
+        <% total = item.product.price * item.quantity %>
+        <td> <%= total %> </td>
+
+        <% grand_total += total %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br />
+<br />
+<div class="row">
+
+  <div class="col">
+    <h2>Grand Total: $<%= grand_total %> </h2>
+    <br />
+  </div>
+
+  <div class="col ">
+    <% if !current_user.cart_items.empty? %>
+      <%= form_tag charges_path do %>
+        <article>
+          <% if flash[:error].present? %>
+            <div id="error_explanation">
+              <p><%= flash[:error] %></p>
+            </div>
+          <% end %>
+
+        </article>
+
+        <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+            data-key="<%= Rails.configuration.stripe[:publishable_key] %>" data-description="A month's subscription"
+            data-amount="500" data-locale="auto"></script>
+      <% end %>
+    <% end %>
+  </div>
+
+</div>
+
+<br>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <%=form_with url: line_items_url , method: "patch", id: "quantity_form", local: true do%>
+
+        <div class="modal-body">
+          <div class="form-group">
+            <div class="row">
+              <div class="col-4">
+                <label for="recipient-name" class="col-form-label">Quantity: </label>
+              </div>
+
+              <div class="col-8">
+                <input type="number" name="quantity" min="1" class="form-control" id="quantity">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <%= submit_tag('Save changes', class: 'btn btn-primary') %>
+
+        </div>
+      <% end %>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  var form;
+  var path;
+  $(document).ready(function () {
+      form = $('#quantity_form');
+      path = form.attr('action');
+  });
+  $('#exampleModal').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget); // Button that triggered the modal
+      var title = button.data('title');
+      var quantity = button.data('quantity');
+      var id = button.data('item');
+      var product_quantity = button.data('product_quantity');
+  
+      // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+      // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+      var modal = $(this);
+      modal.find('.modal-title').text(title);
+      modal.find('.modal-body input').val(quantity);
+      modal.find('.modal-body input').attr('max', product_quantity);
+  
+      form.attr('action', path + "/" + id);
+  })
+</script>
