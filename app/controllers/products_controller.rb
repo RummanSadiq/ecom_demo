@@ -3,7 +3,7 @@ class ProductsController < ApplicationController
   around_action :check_ownership, only: [:edit, :update, :destroy]
 
   def index
-    # @products = Product.all.order(created_at: :desc)
+    @products = Product.all.order(created_at: :desc)
     # @products = Product.search(params[:search])
   end
 
