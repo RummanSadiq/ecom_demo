@@ -1,11 +1,10 @@
 class CommentsController < ApplicationController
   before_action :find_comment, only: [:edit, :update, :destroy]
-  before_action :set_product
 
   def create
     if user_signed_in?
       @product = Product.find_by_id(params[:product_id])
-      if @product
+      if !@product.blank?
         @comment = @product.comments.new(comment_params)
         @comment.user = current_user
         @comment.save
@@ -28,18 +27,13 @@ class CommentsController < ApplicationController
 
   private
 
-  def comment_params
-    params.require(:comment).permit(:content, :product_id)
-  end
-
-  def set_product
-    @product = Product.find_by(id: params[:product_id])
-  end
-
   def find_comment
     if user_signed_in?
       @comment = current_user.comments.find_by_id(params[:id])
-      puts @comment
     end
+  end
+
+  def comment_params
+    params.require(:comment).permit(:content, :product_id)
   end
 end
