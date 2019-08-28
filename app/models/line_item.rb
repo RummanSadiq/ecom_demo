@@ -10,10 +10,9 @@ class LineItem < ApplicationRecord
 
   validates :quantity,
             numericality: { only_integer: true,
-                            greater_than: 0, less_than_or_equal_to: :get_product_quantity }
+                            greater_than: 1, less_than_or_equal_to: :get_product_quantity }
 
   def get_product_quantity
     return self.product.quantity
-    byebug
   end
 end
