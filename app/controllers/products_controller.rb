@@ -4,7 +4,7 @@ class ProductsController < ApplicationController
 
   def index
     # @products = Product.all.order(created_at: :desc)
-    @products = Product.search(params[:search])
+    # @products = Product.search(params[:search])
   end
 
   def show
